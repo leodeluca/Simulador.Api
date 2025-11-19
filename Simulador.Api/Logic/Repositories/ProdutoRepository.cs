@@ -25,6 +25,6 @@ namespace Simulador.Api.Logic.Repositories
                 return await dbContext.Produtos
                     .FirstOrDefaultAsync(p => p.Tipo == tipoProduto);
             }
-    }
+        }
 
-    }
+}
