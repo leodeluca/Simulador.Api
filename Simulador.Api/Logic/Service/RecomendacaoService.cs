@@ -20,6 +20,12 @@ namespace Simulador.Api.Logic.Service
         }
         public async Task<IEnumerable<ProdutoRecomendadoDto>> ObterProdutosRecomendadosAsync(string perfilRisco)
         {
+            var perfisValidos = new List<string> { "Conservador", "Moderado", "Agressivo" };
+            if (!perfisValidos.Contains(perfilRisco, StringComparer.OrdinalIgnoreCase))
+            {
+                throw new ArgumentException($"O perfil de risco '{perfilRisco}' é inválido. Use Conservador, Moderado ou Agressivo.");
+            }
+
             // Lógica de negócios: traduzir perfil para níveis de risco aceitáveis
             List<string> riscosAceitaveis = new List<string>();
             if (perfilRisco == "Moderado")

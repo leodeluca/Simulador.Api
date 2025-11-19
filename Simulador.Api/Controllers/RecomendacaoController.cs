@@ -20,15 +20,31 @@ public class RecomendacoesController : ControllerBase
     [HttpGet("/recomendacoes/{clienteId}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<RecomendacaoProdutoDto>))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<List<RecomendacaoProdutoDto>>> GetRecomendacoesPorCliente(int clienteId)
     {
-        var recomendacoes = await _recomendacaoService.GetRecomendacoesPorClienteId(clienteId);
-
-        if (recomendacoes == null || !recomendacoes.Any())
+        if (clienteId <= 0)
         {
-            return NotFound("Nenhuma recomendação encontrada para o cliente.");
+            return BadRequest("O ID do cliente deve ser um valor positivo.");
         }
 
-        return Ok(recomendacoes);
+        try
+        {
+            var recomendacoes = await _recomendacaoService.GetRecomendacoesPorClienteId(clienteId);
+
+            if (recomendacoes == null || !recomendacoes.Any())
+            {
+                // Este cenário ocorre se o cliente não existe ou se a lógica do serviço não encontrou produtos
+                return NotFound("Nenhuma recomendação encontrada para o cliente.");
+            }
+
+            return Ok(recomendacoes);
+        }
+        catch (Exception ex)
+        {
+            // Logar exceção 'ex' aqui
+            return StatusCode(500, "Ocorreu um erro interno ao buscar as recomendações para o cliente.");
+        }
     }
 }

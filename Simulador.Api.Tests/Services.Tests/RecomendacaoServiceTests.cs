@@ -185,5 +185,24 @@ namespace Simulador.Api.Tests.Services.Tests
             Assert.Equal("Ações Blue Chip", resultado[1].NomeProduto); // 0.15m
         }
 
+        [Fact]
+        public async Task ObterProdutosRecomendadosAsync_DeveLancarExcecao_QuandoPerfilInvalido()
+        {
+            // Arrange
+            var perfilInvalido = "Inexistente";
+
+            // Act & Assert
+            // Espera que o método lance uma ArgumentException
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() =>
+                _service.ObterProdutosRecomendadosAsync(perfilInvalido));
+
+            // Opcional: Verificar a mensagem da exceção
+            Assert.Contains("O perfil de risco 'Inexistente' é inválido", exception.Message);
+
+            // Garante que o repositório nunca foi chamado, pois falhou na validação inicial
+            _mockProdutoRepo.Verify(repo => repo.GetAllAsync(), Times.Never);
+        }
+
+
     }
 }

@@ -23,21 +23,52 @@ namespace Simulador.Api.Controllers
         [HttpGet("/perfil-risco/{clienteId}")]
         public async Task<ActionResult<PerfilRiscoDto>> GetPerfilRisco(int clienteId)
         {
-            var perfil = await _perfilRiscoService.ObterPerfilRiscoAsync(clienteId);
-
-            if (perfil == null)
+            if (clienteId <= 0)
             {
-                return NotFound($"Cliente com ID {clienteId} não encontrado ou sem perfil.");
+                return BadRequest("O ID do cliente deve ser um valor positivo.");
             }
+            try
+            {
+                var perfil = await _perfilRiscoService.ObterPerfilRiscoAsync(clienteId);
 
-            return Ok(perfil);
+                if (perfil == null)
+                {
+                    // Tratamento para cliente não encontrado ou sem perfil
+                    return NotFound($"Cliente com ID {clienteId} não encontrado ou sem perfil.");
+                }
+
+                return Ok(perfil);
+            }
+            catch (Exception ex)
+            {
+                // Logar exceção 'ex' aqui
+                return StatusCode(500, "Ocorreu um erro interno ao buscar o perfil de risco.");
+            }
         }
 
         [HttpGet("/produtos-recomendados/{perfil}")]
         public async Task<ActionResult<IEnumerable<ProdutoRecomendadoDto>>> GetProdutosRecomendados(string perfil)
         {
-            var produtos = await _recomendacaoService.ObterProdutosRecomendadosAsync(perfil);
-            return Ok(produtos);
+            if (string.IsNullOrWhiteSpace(perfil))
+            {
+                return BadRequest("O perfil de risco deve ser especificado.");
+            }
+
+            try
+            {
+                var produtos = await _recomendacaoService.ObterProdutosRecomendadosAsync(perfil);
+                return Ok(produtos);
+            }
+            catch (ArgumentException ex)
+            {
+                // Retorna 400 Bad Request com a mensagem de erro detalhada do serviço
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                // Logar exceção 'ex' aqui
+                return StatusCode(500, "Ocorreu um erro interno ao buscar produtos recomendados.");
+            }
         }
     }
 }
