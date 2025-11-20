@@ -20,10 +20,8 @@ builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
 builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
 builder.Services.AddScoped<IInvestimentoRepository, InvestimentoRepository>();
 
-//var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-var dbName = builder.Configuration.GetConnectionString("Default");
-//var dbPath = Path.Combine(appData, dbName);
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite($"DataSource={dbName}"));
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
 
 var app = builder.Build();
 
