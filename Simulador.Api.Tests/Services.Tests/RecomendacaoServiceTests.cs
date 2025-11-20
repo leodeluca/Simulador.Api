@@ -164,10 +164,11 @@ namespace Simulador.Api.Tests.Services.Tests
             };
 
             // Simula alta frequência e volume médio alto (ativa o path de ordenação por rentabilidade)
+            decimal valorInvestimento = 50001m;
             var historico = new List<Investimento>();
             for (int i = 0; i < 6; i++) // Mais de 5 investimentos recentes
             {
-                historico.Add(new Investimento { Id = i + 1, ClienteId = clienteId, Valor = 6000m, Data = DateTime.Now.AddMonths(-1) });
+                historico.Add(new Investimento { Id = i + 1, ClienteId = clienteId, Valor = valorInvestimento, Data = DateTime.Now.AddMonths(-1) });
             }
             var produtosMock = GetProdutosMock(); // Todos são elegíveis para Agressivo
 
@@ -177,12 +178,13 @@ namespace Simulador.Api.Tests.Services.Tests
 
             // Act
             var resultado = await _service.GetRecomendacoesPorClienteId(clienteId);
+            var listaResultados = resultado.ToList();
 
             // Assert
-            Assert.Equal(2, resultado.Count);
+            Assert.Equal(2, listaResultados.Count);
             // Esperamos ordenação decrescente por rentabilidade (Ações Blue Chip 0.15m, BDR Tech 0.18m)
-            Assert.Equal("BDR Tech", resultado[0].NomeProduto); // 0.18m
-            Assert.Equal("Ações Blue Chip", resultado[1].NomeProduto); // 0.15m
+            Assert.Equal("BDR Tech", listaResultados[0].NomeProduto); // 0.18m
+            Assert.Equal("Ações Blue Chip", listaResultados[1].NomeProduto); // 0.15m
         }
 
         [Fact]

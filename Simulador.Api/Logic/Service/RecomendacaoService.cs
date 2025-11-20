@@ -26,14 +26,15 @@ namespace Simulador.Api.Logic.Service
                 throw new ArgumentException($"O perfil de risco '{perfilRisco}' é inválido. Use Conservador, Moderado ou Agressivo.");
             }
 
+            string perfilPadronizado = char.ToUpper(perfilRisco[0]) + perfilRisco.Substring(1).ToLower();
             // Lógica de negócios: traduzir perfil para níveis de risco aceitáveis
             List<string> riscosAceitaveis = new List<string>();
-            if (perfilRisco == "Moderado")
+            if (perfilPadronizado == "Moderado")
             {
                 riscosAceitaveis.Add("Baixo");
                 riscosAceitaveis.Add("Moderado");
             }
-            else if (perfilRisco == "Agressivo")
+            else if (perfilPadronizado == "Agressivo")
             {
                 riscosAceitaveis.Add("Baixo");
                 riscosAceitaveis.Add("Moderado");
@@ -77,7 +78,7 @@ namespace Simulador.Api.Logic.Service
 
             // 2. Analisar Frequência de Movimentações
             var investimentosRecentes = historico.Where(i => i.Data >= DateTime.Now.AddMonths(-6)).ToList();
-            var frequenciaAlta = investimentosRecentes.Count > 5;
+            var frequenciaAlta = investimentosRecentes.Count > 3;
 
             // 3. Analisar Preferência por Liquidez ou Rentabilidade
             List<Produto> produtosRecomendados = new List<Produto>();
@@ -128,13 +129,13 @@ namespace Simulador.Api.Logic.Service
             }
 
             // Refinar as recomendações com base no volume e frequência
-            if (frequenciaAlta && volumeMedio > 5000)
+            if (frequenciaAlta && volumeMedio > 50000)
             {
                 produtosRecomendados = produtosRecomendados.OrderByDescending(p => p.Rentabilidade).ThenBy(p => p.Risco).ToList();
             }
             else if (!frequenciaAlta && volumeTotal > 20000)
             {
-                produtosRecomendados = produtosRecomendados.Where(p => p.Nome.Contains("2026") || p.Nome.Contains("Longo Prazo")).ToList();
+                produtosRecomendados = produtosRecomendados.Where(p => p.Tipo == "RF").ToList();
             }
             else
             {
