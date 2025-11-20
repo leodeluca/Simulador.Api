@@ -3,6 +3,9 @@ using Simulador.Api.Logic.Service;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+/// <summary>
+/// Controlador responsável por gerenciar recomendações de produtos de investimento.
+/// </summary>
 [ApiController]
 [Route("[controller]")]
 public class RecomendacoesController : ControllerBase
@@ -14,9 +17,20 @@ public class RecomendacoesController : ControllerBase
         _recomendacaoService = recomendacaoService;
     }
 
+    /// <summary>
+    /// Representa um DTO (Data Transfer Object) para um produto recomendado.
+    /// </summary>
     public record RecomendacaoProdutoDto(int ProdutoId, string NomeProduto, string TipoProduto, string MotivoRecomendacao);
 
     // Endpoint: GET /api/recomendacoes/{clienteId}
+    /// <summary>
+    /// Obtém uma lista de recomendações de produtos de investimento com base no perfil do cliente.
+    /// </summary>
+    /// <remarks>
+    /// Retorna até 3 opções de produtos que se alinham ao perfil de risco e histórico do cliente.
+    /// </remarks>
+    /// <param name="clienteId">O ID exclusivo do cliente para quem a recomendação se destina.</param>
+    /// <returns>Uma lista de objetos RecomendacaoProdutoDto.</returns>
     [HttpGet("/recomendacoes/{clienteId}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<RecomendacaoProdutoDto>))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

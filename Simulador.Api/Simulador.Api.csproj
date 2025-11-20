@@ -4,6 +4,10 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+	  <!-- Habilita a geração do arquivo XML -->
+	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
+	  <!-- Suprime avisos sobre métodos públicos sem comentários, se desejar -->
+	  <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

@@ -2,12 +2,18 @@ using Microsoft.EntityFrameworkCore;
 using Simulador.Api.Data;
 using Simulador.Api.Logic.Repositories;
 using Simulador.Api.Logic.Service;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    // Configure o Swagger para incluir os comentários XML gerados
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+});
 
 // Application Services
 builder.Services.AddScoped<IPerfilRiscoService, PerfilRiscoService>();
