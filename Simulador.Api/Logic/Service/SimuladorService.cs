@@ -18,11 +18,10 @@ namespace Simulador.Api.Logic.Service
 
         public async Task<SimularInvestimentoResponse> ProcessarESalvarSimulacaoAsync(SimularInvestimentoRequest request)
         {
-            var produtoReal = await _produtoRepository.GetByTipoAsync(request.TipoProduto); // Exemplo de um método que você criaria
+            var produtoReal = await _produtoRepository.GetByTipoAsync(request.TipoProduto);
 
             if (produtoReal == null)
             {
-                // Trate o caso em que o produto não é encontrado
                 throw new InvalidOperationException($"Produto do tipo '{request.TipoProduto}' não encontrado.");
             }
 
@@ -42,8 +41,7 @@ namespace Simulador.Api.Logic.Service
             var simulacaoEntity = new Simulacao
             {
                 ClienteId = request.ClienteId,
-                ProdutoNome = produtoReal.Nome, // Usando o nome do produto real
-                //TipoProduto = produtoReal.Tipo, // Usando o tipo do produto real
+                ProdutoNome = produtoReal.Nome,
                 ValorInvestido = request.Valor,
                 ValorFinal = valorFinalCalculado,
                 PrazoMeses = request.PrazoMeses,
@@ -57,10 +55,8 @@ namespace Simulador.Api.Logic.Service
 
         public async Task<IEnumerable<HistoricoSimulacaoDto>> ObterHistoricoSimulacoesAsync()
         {
-            // Uso do repositório para buscar dados
             var simulacoes = await _simuladorRepository.GetAllSimulacoesAsync();
 
-            // Mapeamento de Entidade para DTO de Retorno
             return simulacoes.Select(s => new HistoricoSimulacaoDto(
                 s.Id,
                 s.ClienteId,
@@ -74,7 +70,6 @@ namespace Simulador.Api.Logic.Service
 
         public async Task<IEnumerable<ValoresPorProdutoDiaDto>> ObterValoresPorProdutoDiaAsync()
         {
-            // O serviço apenas chama o repositório e retorna o resultado
             return await _simuladorRepository.GetValoresPorProdutoDiaAsync();
         }
     }

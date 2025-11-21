@@ -11,7 +11,6 @@ namespace Simulador.Api.Tests.Services.Tests
         private readonly Mock<IInvestimentoRepository> _mockRepository;
         private readonly InvestimentoService _service;
 
-        // O construtor é executado antes de cada teste (Fixture Setup)
         public InvestimentoServiceTests()
         {
             _mockRepository = new Mock<IInvestimentoRepository>();
@@ -21,17 +20,17 @@ namespace Simulador.Api.Tests.Services.Tests
         [Fact]
         public async Task ObterHistoricoAsync_DeveRetornarListaVazia_QuandoNaoHouverInvestimentosParaOCliente()
         {
-            // Arrange (Preparação)
+            // Arrange
             int clienteId = 99; // Um ID que não existe
 
             // Configura o mock para retornar uma lista vazia quando GetByClienteIdAsync for chamado com qualquer Int
             _mockRepository.Setup(repo => repo.GetByClienteIdAsync(It.IsAny<int>()))
                            .ReturnsAsync(new List<Investimento>());
 
-            // Act (Ação)
+            // Act
             var resultado = await _service.ObterHistoricoAsync(clienteId);
 
-            // Assert (Verificação)
+            // Assert
             Assert.NotNull(resultado);
             Assert.Empty(resultado);
         }
@@ -39,7 +38,7 @@ namespace Simulador.Api.Tests.Services.Tests
         [Fact]
         public async Task ObterHistoricoAsync_DeveRetornarListaDeInvestimentosDto_QuandoExistiremInvestimentos()
         {
-            // Arrange (Preparação)
+            // Arrange 
             int clienteId = 1;
             var investimentosDoRepositorio = new List<Investimento>
             {
@@ -51,10 +50,10 @@ namespace Simulador.Api.Tests.Services.Tests
             _mockRepository.Setup(repo => repo.GetByClienteIdAsync(clienteId))
                            .ReturnsAsync(investimentosDoRepositorio);
 
-            // Act (Ação)
+            // Act 
             var resultado = await _service.ObterHistoricoAsync(clienteId);
 
-            // Assert (Verificação)
+            // Assert 
             Assert.NotNull(resultado);
             var listaResultado = resultado.ToList();
             Assert.Equal(2, listaResultado.Count);
@@ -68,15 +67,15 @@ namespace Simulador.Api.Tests.Services.Tests
         [Fact]
         public async Task ObterHistoricoAsync_DeveChamarOMetodoDoRepositorioApenasUmaVez()
         {
-            // Arrange (Preparação)
+            // Arrange
             int clienteId = 1;
             _mockRepository.Setup(repo => repo.GetByClienteIdAsync(clienteId))
                           .ReturnsAsync(new List<Investimento>());
 
-            // Act (Ação)
+            // Act
             await _service.ObterHistoricoAsync(clienteId);
 
-            // Assert (Verificação)
+            // Assert
             // Verifica se o método GetByClienteIdAsync no mock foi chamado exatamente uma vez com o clienteId correto.
             _mockRepository.Verify(repo => repo.GetByClienteIdAsync(clienteId), Times.Once);
         }

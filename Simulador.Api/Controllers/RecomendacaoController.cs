@@ -22,7 +22,6 @@ public class RecomendacoesController : ControllerBase
     /// </summary>
     public record RecomendacaoProdutoDto(int ProdutoId, string NomeProduto, string TipoProduto, string MotivoRecomendacao);
 
-    // Endpoint: GET /api/recomendacoes/{clienteId}
     /// <summary>
     /// Obtém uma lista de recomendações de produtos de investimento com base no perfil do cliente.
     /// </summary>
@@ -49,7 +48,6 @@ public class RecomendacoesController : ControllerBase
 
             if (recomendacoes == null || !recomendacoes.Any())
             {
-                // Este cenário ocorre se o cliente não existe ou se a lógica do serviço não encontrou produtos
                 return NotFound("Nenhuma recomendação encontrada para o cliente.");
             }
 
@@ -57,7 +55,6 @@ public class RecomendacoesController : ControllerBase
         }
         catch (Exception ex)
         {
-            // Logar exceção 'ex' aqui
             return StatusCode(500, "Ocorreu um erro interno ao buscar as recomendações para o cliente.");
         }
     }

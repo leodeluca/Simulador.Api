@@ -37,7 +37,6 @@ namespace Simulador.Api.Tests.Services.Tests
                             .ReturnsAsync((Produto)null);
 
             // Act & Assert
-            // Esperamos que o método lance uma InvalidOperationException
             await Assert.ThrowsAsync<InvalidOperationException>(() =>
                 _service.ProcessarESalvarSimulacaoAsync(requestInvalido));
 
@@ -60,15 +59,15 @@ namespace Simulador.Api.Tests.Services.Tests
                 Id = 10,
                 Nome = "CDB XYZ",
                 Tipo = "RF",
-                Rentabilidade = 0.10m, // 10% ao ano
+                Rentabilidade = 0.10m,
                 Risco = "Baixo"
             };
 
-            // Setup: Quando buscar por "RF", retorne o produto falso
+            //Quando buscar por "RF", retorne o produto falso
             _mockProdutoRepo.Setup(repo => repo.GetByTipoAsync("RF"))
                             .ReturnsAsync(produtoFalso);
 
-            // Setup: Configura o mock do SimuladorRepository para aceitar qualquer chamada (void method)
+            //Configura o mock do SimuladorRepository para aceitar qualquer chamada
             _mockSimuladorRepo.Setup(repo => repo.AddSimulacaoAsync(It.IsAny<Simulacao>()))
                               .Returns(Task.CompletedTask)
                               .Callback<Simulacao>(s =>

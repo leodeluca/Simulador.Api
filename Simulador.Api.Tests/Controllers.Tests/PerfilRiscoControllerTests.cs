@@ -145,11 +145,8 @@ namespace Simulador.Api.Tests.Controllers.Tests
             var result = await _controller.GetProdutosRecomendados(perfilInvalido);
 
             // Assert
-            // Esperamos um BadRequestObjectResult (400 Bad Request)
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result.Result);
             Assert.Equal(StatusCodes.Status400BadRequest, badRequestResult.StatusCode);
-
-            // Opcional: Verificar se a mensagem de erro foi repassada corretamente
             Assert.Contains("O perfil de risco 'Inexistente' é inválido", badRequestResult.Value.ToString());
 
             _mockRecomendacaoService.Verify(s => s.ObterProdutosRecomendadosAsync(perfilInvalido), Times.Once);

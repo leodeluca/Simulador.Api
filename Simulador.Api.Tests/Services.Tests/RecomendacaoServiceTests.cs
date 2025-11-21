@@ -24,7 +24,6 @@ namespace Simulador.Api.Tests.Services.Tests
             );
         }
 
-        // Dados de produtos mockados que serão usados em vários testes
         private List<Produto> GetProdutosMock()
         {
             return new List<Produto>
@@ -145,7 +144,7 @@ namespace Simulador.Api.Tests.Services.Tests
             var resultado = await _service.GetRecomendacoesPorClienteId(clienteId);
 
             // Assert
-            Assert.Equal(2, resultado.Count); // Deve retornar os 3 primeiros, ordenados por risco (Baixo -> Medio -> Alto)
+            Assert.Equal(2, resultado.Count);
             Assert.Equal("LCI High Yield", resultado[0].NomeProduto); // Risco Medio
             Assert.Equal("Fundo Multimercado", resultado[1].NomeProduto); // Risco Medio
         }
@@ -182,7 +181,6 @@ namespace Simulador.Api.Tests.Services.Tests
 
             // Assert
             Assert.Equal(2, listaResultados.Count);
-            // Esperamos ordenação decrescente por rentabilidade (Ações Blue Chip 0.15m, BDR Tech 0.18m)
             Assert.Equal("BDR Tech", listaResultados[0].NomeProduto); // 0.18m
             Assert.Equal("Ações Blue Chip", listaResultados[1].NomeProduto); // 0.15m
         }
@@ -198,7 +196,7 @@ namespace Simulador.Api.Tests.Services.Tests
             var exception = await Assert.ThrowsAsync<ArgumentException>(() =>
                 _service.ObterProdutosRecomendadosAsync(perfilInvalido));
 
-            // Opcional: Verificar a mensagem da exceção
+            //Verificar a mensagem da exceção
             Assert.Contains("O perfil de risco 'Inexistente' é inválido", exception.Message);
 
             // Garante que o repositório nunca foi chamado, pois falhou na validação inicial

@@ -11,7 +11,6 @@ namespace Simulador.Api.Tests.Services.Tests
         private readonly Mock<IClienteRepository> _mockRepository;
         private readonly PerfilRiscoService _service;
 
-        // Configuração inicial (Fixture Setup)
         public PerfilRiscoServiceTests()
         {
             _mockRepository = new Mock<IClienteRepository>();
@@ -21,17 +20,17 @@ namespace Simulador.Api.Tests.Services.Tests
         [Fact]
         public async Task ObterPerfilRiscoAsync_DeveRetornarNull_QuandoClienteNaoEncontrado()
         {
-            // Arrange (Preparação)
+            // Arrange
             int clienteIdInexistente = 999;
 
             // Configura o mock para retornar null quando o repositório for chamado com este ID
             _mockRepository.Setup(repo => repo.GetClienteComPerfilAsync(clienteIdInexistente))
                            .ReturnsAsync((Cliente)null);
 
-            // Act (Ação)
+            // Act
             var resultado = await _service.ObterPerfilRiscoAsync(clienteIdInexistente);
 
-            // Assert (Verificação)
+            // Assert
             Assert.Null(resultado);
 
             // Verifica se o método do repositório foi chamado exatamente uma vez com o ID correto
@@ -41,15 +40,15 @@ namespace Simulador.Api.Tests.Services.Tests
         [Fact]
         public async Task ObterPerfilRiscoAsync_DeveRetornarNull_QuandoClienteEncontradoSemPerfilAssociado()
         {
-            // Arrange (Preparação)
+            // Arrange
             int clienteIdSemPerfil = 50;
-            // A estrutura agora exige PerfilId. Definimos Perfil como null para simular a falha na inclusão (Include) do EF.
+            //Define Perfil como null para simular a falha na inclusão.
             var clienteSemPerfil = new Cliente { Id = clienteIdSemPerfil, PerfilId = 0, Perfil = null, PontuacaoRisco = 10 };
 
             _mockRepository.Setup(repo => repo.GetClienteComPerfilAsync(clienteIdSemPerfil))
                            .ReturnsAsync(clienteSemPerfil);
 
-            // Act (Ação)
+            // Act
             var resultado = await _service.ObterPerfilRiscoAsync(clienteIdSemPerfil);
 
             // Assert (Verificação)
@@ -60,7 +59,7 @@ namespace Simulador.Api.Tests.Services.Tests
         [Fact]
         public async Task ObterPerfilRiscoAsync_DeveRetornarPerfilRiscoDtoCorreto_QuandoClienteEPerfilExistem()
         {
-            // Arrange (Preparação)
+            // Arrange
             int clienteId = 1;
             string nomePerfilEsperado = "Agressivo";
             int pontuacaoEsperada = 85;
@@ -86,10 +85,10 @@ namespace Simulador.Api.Tests.Services.Tests
             _mockRepository.Setup(repo => repo.GetClienteComPerfilAsync(clienteId))
                            .ReturnsAsync(clienteExistente);
 
-            // Act (Ação)
+            // Act
             var resultado = await _service.ObterPerfilRiscoAsync(clienteId);
 
-            // Assert (Verificação)
+            // Assert
             Assert.NotNull(resultado);
             Assert.IsType<PerfilRiscoDto>(resultado);
 

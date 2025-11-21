@@ -10,12 +10,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
-    // Configure o Swagger para incluir os comentários XML gerados
+    // Configura o Swagger para incluir os comentários XML gerados
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
 
-// Application Services
 builder.Services.AddScoped<IPerfilRiscoService, PerfilRiscoService>();
 builder.Services.AddScoped<ISimuladorService, SimuladorService>();
 builder.Services.AddScoped<IRecomendacaoService, RecomendacaoService>();

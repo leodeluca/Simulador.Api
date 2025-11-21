@@ -23,24 +23,22 @@ namespace Simulador.Api.Logic.Repositories
 
         public async Task<IEnumerable<ValoresPorProdutoDiaDto>> GetValoresPorProdutoDiaAsync()
         {
-            // A lógica complexa e específica do Entity Framework fica aqui
             var resultadosAgregadosNoBanco = await dbContext.Simulacoes
                 .GroupBy(s => new {
-                    NomeDoProduto = s.ProdutoNome, // Usando ProdutoNome conforme o modelo original da pergunta
-                    Data = s.Data.Date // Usando .Value porque DataSimulacao é anulável
+                    NomeDoProduto = s.ProdutoNome,
+                    Data = s.Data.Date
                 })
                 .Select(g => new {
                     Produto = g.Key.NomeDoProduto,
-                    Data = g.Key.Data, // Mapeia para o formato string do DTO
+                    Data = g.Key.Data,
                     QuantidadeSimulacoes = g.Count(),
-                    MediaValorFinal = g.Average(s => s.ValorFinal) // Usando .Value porque ValorFinal é anulável
+                    MediaValorFinal = g.Average(s => s.ValorFinal)
                 })
                 .ToListAsync();
 
             var resultadosFinais = resultadosAgregadosNoBanco.Select(r => 
                 new ValoresPorProdutoDiaDto(
                     Produto: r.Produto,
-                    // Formatamos para string AGORA, em memória, sem restrições de tradução SQL
                     Data: r.Data.ToString("yyyy-MM-dd"),
                     QuantidadeSimulacoes: r.QuantidadeSimulacoes,
                     MediaValorFinal: r.MediaValorFinal

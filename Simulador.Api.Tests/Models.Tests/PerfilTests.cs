@@ -5,7 +5,6 @@ namespace Simulador.Api.Tests.Models.Tests
 {
     public class PerfilTests
     {
-        // Método auxiliar para facilitar a validação em todos os testes
         private bool TryValidate(object model, out ICollection<ValidationResult> results)
         {
             results = new List<ValidationResult>();

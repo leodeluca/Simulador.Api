@@ -21,7 +21,6 @@ namespace Simulador.Api.Logic.Repositories
 
             public async Task<Produto?> GetByTipoAsync(string tipoProduto)
             {
-                // Implemente a lógica de busca (ex: pelo tipo ou nome)
                 return await dbContext.Produtos
                     .FirstOrDefaultAsync(p => p.Tipo == tipoProduto);
             }

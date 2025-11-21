@@ -114,21 +114,21 @@ namespace Simulador.Api.Logic.Service
             }
 
             // Refinamento usando a Pontuação de Risco do cliente (0-100)
-            // Filtramos os produtos base para aqueles cujo risco é "compatível" com a pontuação do cliente.
-            // Definimos uma margem de tolerância (ex: +/- 20 pontos da pontuação do cliente)
+            // Filtra os produtos base para aqueles cujo risco é "compatível" com a pontuação do cliente.
+            // Define uma margem de tolerância (ex: +/- 20 pontos da pontuação do cliente)
             int pontuacaoCliente = cliente.PontuacaoRisco;
 
             produtosRecomendados = produtosBase
             .Where(p => getRiscoNumerico(p) <= pontuacaoCliente + 15 && getRiscoNumerico(p) >= pontuacaoCliente - 15)
             .ToList();
 
-            // Se a lista de produtos refinados estiver vazia, voltamos para a lista base para garantir alguma recomendação
+            // Se a lista de produtos recomendados estiver vazia, voltamos para a lista base para garantir alguma recomendação
             if (!produtosRecomendados.Any())
             {
                 produtosRecomendados = produtosBase;
             }
 
-            // Refinar as recomendações com base no volume e frequência
+            // Refina as recomendações com base no volume e frequência
             if (frequenciaAlta && volumeMedio > 50000)
             {
                 produtosRecomendados = produtosRecomendados.OrderByDescending(p => p.Rentabilidade).ThenBy(p => p.Risco).ToList();

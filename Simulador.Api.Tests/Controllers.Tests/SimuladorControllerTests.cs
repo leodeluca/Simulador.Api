@@ -66,7 +66,7 @@ namespace Simulador.Api.Tests.Controllers.Tests
             // Arrange
             var request = new SimularInvestimentoRequest(1, 1000m, 12, "ProdutoInexistente");
 
-            // Simula a exceção que o serviço lançaria (conforme a lógica que testamos anteriormente)
+            // Simula a exceção que o serviço lançaria
             _mockService.Setup(s => s.ProcessarESalvarSimulacaoAsync(request))
                         .ThrowsAsync(new InvalidOperationException("Produto não encontrado."));
 

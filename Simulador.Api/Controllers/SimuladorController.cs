@@ -37,7 +37,6 @@ namespace Simulador.Api.Controllers
             }
             catch (Exception ex)
             {
-                // Logar exceção 'ex' aqui
                 return StatusCode(500, "Ocorreu um erro interno ao buscar o histórico de simulações.");
             }
         }
@@ -54,7 +53,6 @@ namespace Simulador.Api.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<SimularInvestimentoResponse>> SimularInvestimento([FromBody] SimularInvestimentoRequest request)
         {
-            // Validações básicas de entrada
             if (request.ClienteId <= 0 || request.Valor <= 0 || request.PrazoMeses <= 0 || string.IsNullOrEmpty(request.TipoProduto))
             {
                 return BadRequest("Dados de requisição inválidos. ClienteId, Valor e PrazoMeses devem ser positivos e TipoProduto não pode ser vazio.");
@@ -63,19 +61,14 @@ namespace Simulador.Api.Controllers
             try
             {
                 var response = await service.ProcessarESalvarSimulacaoAsync(request);
-                // Retorna 200 OK com o resultado
                 return Ok(response);
-                // Alternativamente, se preferir o 201 CreatedAtAction:
-                // return CreatedAtAction(nameof(GetHistoricoSimulacoes), new { clienteId = request.ClienteId }, response);
             }
             catch (InvalidOperationException ex)
             {
-                // Este catch lida especificamente com a exceção lançada pelo serviço quando o produto não existe
-                return NotFound(ex.Message); // Retorna 404 Not Found
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
-                // Logar exceção 'ex' aqui
                 return StatusCode(500, "Ocorreu um erro interno ao processar a simulação.");
             }
         }
@@ -94,13 +87,11 @@ namespace Simulador.Api.Controllers
         {
             try
             {
-                // O controlador apenas delega a tarefa ao serviço
                 var resultados = await service.ObterValoresPorProdutoDiaAsync();
                 return Ok(resultados);
             }
             catch (Exception ex)
             {
-                // Logar exceção 'ex' aqui
                 return StatusCode(500, "Ocorreu um erro interno ao buscar valores agregados.");
             }
         }

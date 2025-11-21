@@ -18,7 +18,6 @@ namespace Simulador.Api.Controllers
             _recomendacaoService = recomendacaoService; // Atribua o serviço injetado
         }
 
-        // DTO para o response (record)
         /// <summary>
         /// Representa o DTO (Data Transfer Object) para o perfil de risco de um cliente.
         /// </summary>
@@ -56,7 +55,6 @@ namespace Simulador.Api.Controllers
 
                 if (perfil == null)
                 {
-                    // Tratamento para cliente não encontrado ou sem perfil
                     return NotFound($"Cliente com ID {clienteId} não encontrado ou sem perfil.");
                 }
 
@@ -64,7 +62,6 @@ namespace Simulador.Api.Controllers
             }
             catch (Exception ex)
             {
-                // Logar exceção 'ex' aqui
                 return StatusCode(500, "Ocorreu um erro interno ao buscar o perfil de risco.");
             }
         }
@@ -95,12 +92,10 @@ namespace Simulador.Api.Controllers
             }
             catch (ArgumentException ex)
             {
-                // Retorna 400 Bad Request com a mensagem de erro detalhada do serviço
                 return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
-                // Logar exceção 'ex' aqui
                 return StatusCode(500, "Ocorreu um erro interno ao buscar produtos recomendados.");
             }
         }
